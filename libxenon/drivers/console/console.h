@@ -41,6 +41,7 @@ void console_clrscr();
 void console_clrline();
 void console_init(void);
 void console_close(void);
+void console_pset(int x, int y, unsigned char r, unsigned char g, unsigned char b);
 
 #ifdef __cplusplus
 };
