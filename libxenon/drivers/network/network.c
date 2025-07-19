@@ -120,11 +120,8 @@ void network_poll()
 
 void network_print_config()
 {
-	printf(" * network config: %d.%d.%d.%d / %d.%d.%d.%d\n",
-		NTOA(netif.ip_addr), NTOA(netif.netmask));
-	printf("              MAC: %02X%02X%02X%02X%02X%02X\n\n",
-			netif.hwaddr[0], netif.hwaddr[1], netif.hwaddr[2],
-			netif.hwaddr[3], netif.hwaddr[4], netif.hwaddr[5]);
+	printf(" * network config: %d.%d.%d.%d / %d.%d.%d.%d / %02X:%02X:%02X:%02X:%02X:%02X\n",
+		NTOA(netif.ip_addr), NTOA(netif.netmask),
+      netif.hwaddr[0], netif.hwaddr[1], netif.hwaddr[2],
+		netif.hwaddr[3], netif.hwaddr[4], netif.hwaddr[5]);
 }
-
-

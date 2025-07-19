@@ -149,7 +149,7 @@ void xenon_set_speed(int new_speed, int vid_delta)
 	if(!rev700up){
 		int vlt = 11000 + (0x3D - ((base_vid < 0x15) ? base_vid + 0x3E : base_vid)) * 125;
 
-		printf(" * default VID: %02x (%d.%04dV)\n", base_vid, vlt / 10000, vlt % 10000);
+		//printf(" * default VID: %02x (%d.%04dV)\n", base_vid, vlt / 10000, vlt % 10000);
 
 		if (base_vid < 0x15)
 			base_vid += 0x3e;
@@ -163,7 +163,7 @@ void xenon_set_speed(int new_speed, int vid_delta)
 
 		int vlt = 11000 + (0x3D - ((new_vid < 0x15) ? new_vid + 0x3E : new_vid)) * 125;
 
-		printf(" * using new VID: %02x (%d.%04dV)\n", new_vid, vlt / 10000, vlt % 10000);
+		//printf(" * using new VID: %02x (%d.%04dV)\n", new_vid, vlt / 10000, vlt % 10000);
 	}
 
 	v &= ~0xBF08ULL;
