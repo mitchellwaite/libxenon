@@ -31,7 +31,7 @@ extern err_t enet_init(struct netif *netif);
 void network_poll();
 
 
-void network_init()
+int network_init()
 {
 
 #ifdef STATS
@@ -54,7 +54,7 @@ void network_init()
 	printf(" * initializing NIC\n");
 	if (!netif_add(&netif, &ipaddr, &netmask, &gateway, NULL, enet_init, ip_input)){
 		printf(" ! netif_add failed!\n");
-		return;
+		return -1;
 	}
 	netif_set_default(&netif);
 
@@ -86,6 +86,8 @@ void network_init()
 		IP4_ADDR(&netmask, 255, 255, 255, 0);
 		netif_set_addr(&netif, &ipaddr, &netmask, &gateway);
 		netif_set_up(&netif);
+
+      return 1;
 	}
 }
 

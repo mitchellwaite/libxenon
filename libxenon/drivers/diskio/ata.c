@@ -232,23 +232,23 @@ xenon_ata_dumpinfo(struct xenon_ata_device *dev, char *info) {
 		data[i + 1] = info[i];
 	}
 
-	/* The device information was read, dump it for debugging.  */
+	/* The device information was read, dump it for debugging.
 	strncpy(text, data + 20, 20);
 	text[20] = 0;
 	printf("  * Serial: %s\n", text);
 	strncpy(text, data + 46, 8);
 	text[8] = 0;
-	printf("  * Firmware: %s\n", text);
+	printf("  * Firmware: %s\n", text);  */
 	strncpy(text, data + 54, 40);
 	text[40] = 0;
-	printf("  * Model: %s\n", text);
-
+	printf("%s\n", text);
+/*
 	if (!dev->atapi) {
 		printf("  * Addressing mode: %d\n", dev->addressing_mode);
 		printf("  * #cylinders: %d\n", (int) dev->cylinders);
 		printf("  * #heads: %d\n", (int) dev->heads);
 		printf("  * #sectors: %d\n", (int) dev->size);
-	}
+	}*/
 }
 
 static void
@@ -451,12 +451,12 @@ xenon_atapi_inquiry_model(struct xenon_ata_device *dev) {
 	xenon_atapi_packet(dev, cdb, 0);
 	xenon_ata_wait_ready(dev);
 	if (xenon_ata_pio_read(dev, buf, sizeof (buf))) {
-		printf("ATAPI inquiry failed\n");
+		printf("None\n");
 		return -1;
 	};
 
 	buf[8 + 24] = '\0';
-	printf("ATAPI inquiry model: %s\n", &buf[8]);
+	printf("%s\n", &buf[8]);
 
 	return 0;
 }
@@ -678,7 +678,6 @@ xenon_ata_init1(struct xenon_ata_device *dev, uint32_t ioaddress, uint32_t ioadd
 	xenon_ata_regset(dev, XENON_ATA_REG_LBALOW, 0x5A);
 	xenon_ata_wait();
 	if (xenon_ata_regget(dev, XENON_ATA_REG_LBALOW) != 0x5A) {
-		printf("no ata device connected.\n");
 		return -1;
 	}
 
@@ -696,8 +695,6 @@ xenon_ata_init1(struct xenon_ata_device *dev, uint32_t ioaddress, uint32_t ioadd
 	xenon_ata_regget2(dev, XENON_ATA_REG2_CONTROL);
 	xenon_ata_regget2(dev, XENON_ATA_REG2_CONTROL);
 	xenon_ata_regget2(dev, XENON_ATA_REG2_CONTROL);
-
-	printf("SATA device at %08lx\n", dev->ioaddress);
 
 	return 0;
 }
