@@ -75,7 +75,6 @@ unsigned int xenon_get_kv_offset();
 #define VFUSES_SIZE               0x60
 #define VFUSES_OFFSET			  0x95000
 #define ZFUSES_OFFSET           0xC0000
-
 #define XELL_SIZE (256*1024)
 #define XELL_FOOTER_OFFSET (256*1024-16)
 #define XELL_FOOTER_LENGTH 16
