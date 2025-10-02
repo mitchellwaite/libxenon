@@ -89,6 +89,8 @@ int network_init()
 
       return 1;
 	}
+
+   return 0;
 }
 
 void network_poll()
