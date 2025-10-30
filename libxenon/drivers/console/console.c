@@ -42,7 +42,7 @@ uint32_t console_oldbg, console_oldfg;
 
 static unsigned char *console_fb = 0LL;
 
-static int cursor_x, cursor_y, max_x, max_y, offset_x, offset_y, pixel_max_x;
+static int cursor_x, cursor_y, max_x, max_y, offset_x, offset_y, pixel_max_x, pixel_max_y;
 
 struct ati_info {
 	uint32_t unknown1[4];
@@ -66,13 +66,13 @@ static inline void console_pset32(int x, int y, int color)
 
 void console_pset(int x, int y, unsigned char r, unsigned char g, unsigned char b) {
 	console_pset32(x + offset_x, y + offset_y, (b<<24) + (g<<16) + (r<<8));
-	/* little indian:
+	/* little endian:
 	 * fbint[base] = b + (g<<8) + (r<<16); */
 }
 
 void console_pset_right(int x, int y, unsigned char r, unsigned char g, unsigned char b) {
 	console_pset32(pixel_max_x - x, y + offset_y, (b<<24) + (g<<16) + (r<<8));
-	/* little indian:
+	/* little endian:
 	 * fbint[base] = b + (g<<8) + (r<<16); */
 }
 
@@ -183,9 +183,10 @@ void console_init(void) {
 	}
 
 	cursor_x = cursor_y = 0;
-   pixel_max_x = ai->width - offset_x * 2;
+	pixel_max_x = ai->width - offset_x * 2;
 	max_x = pixel_max_x / 8;
-	max_y = (ai->height - offset_y * 2) / 16;
+	pixel_max_y = ai->height - offset_y * 2;
+	max_y = pixel_max_y / 16;
 	
 	console_clrscr();
 	
@@ -207,7 +208,7 @@ void console_get_dimensions(unsigned int * width,unsigned int * height){
 
 void console_open(void)
 {
-   stdout_hook = console_stdout_hook;
+	stdout_hook = console_stdout_hook;
 }
 
 void console_close(void)

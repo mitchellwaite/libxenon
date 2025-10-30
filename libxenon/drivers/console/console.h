@@ -32,7 +32,7 @@ extern uint32_t console_oldbg, console_oldfg;
         printf(s, ##__VA_ARGS__); \
         console_set_colors(console_oldbg,console_oldfg); }
 
-#define PRINT_SUCCESS(s, ...) PRINT_COL(console_color[0],CONSOLE_SUCCESS, s, ##__VA_ARGS__)    
+#define PRINT_SUCCESS(s, ...) PRINT_COL(console_color[0],CONSOLE_SUCCESS, s, ##__VA_ARGS__)
 #define PRINT_WARN(s, ...) PRINT_COL(console_color[0],CONSOLE_WARN, s, ##__VA_ARGS__)
 #define PRINT_ERR(s, ...) PRINT_COL(console_color[0],CONSOLE_ERR, s, ##__VA_ARGS__)
 
