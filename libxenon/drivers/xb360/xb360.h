@@ -72,13 +72,8 @@ unsigned int xenon_get_kv_offset();
 #define KV_FLASH_OFFSET			  xenon_get_kv_offset()
 #define KV_FLASH_PAGES            KV_FLASH_SIZE / 0x200
 #define KV_FLASH_PTR              0x6C
-
 #define VFUSES_SIZE               0x60
-#define VFUSES_OFFSETS_COUNT      4
-static const unsigned int vfusesOffsets[VFUSES_OFFSETS_COUNT] = { 0x95000,   // JTAG image virtual fuses
-                                                                  0xC0000,   // DevGL/Glitch2m retail virtual fuses
-                                                                  0xE0000,   // DevGL/Glitch2m devkit virtual fuses (16mb)
-                                                                  0xE4000 }; // DevGL/devkit virtual fuses (64mb)
+#define VFUSES_OFFSET			  0x95000
 
 #define XELL_SIZE (256*1024)
 #define XELL_FOOTER_OFFSET (256*1024-16)
