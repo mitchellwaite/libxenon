@@ -4,7 +4,6 @@
 
 #include "lwipopts.h"
 #include "lwip/debug.h"
-
 #include "lwip/timers.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
@@ -12,11 +11,12 @@
 #include "lwip/init.h"
 #include "lwip/dhcp.h"
 #include "lwip/stats.h"
-
 #include "lwip/ip.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
 #include "lwip/tcp_impl.h"
+
+#include "network.h"
 
 struct netif netif;
 
@@ -54,7 +54,7 @@ int network_init()
 	printf(" * initializing NIC\n");
 	if (!netif_add(&netif, &ipaddr, &netmask, &gateway, NULL, enet_init, ip_input)){
 		printf(" ! netif_add failed!\n");
-		return -1;
+		return NETWORK_INIT_FAILURE;
 	}
 	netif_set_default(&netif);
 
@@ -86,11 +86,10 @@ int network_init()
 		IP4_ADDR(&netmask, 255, 255, 255, 0);
 		netif_set_addr(&netif, &ipaddr, &netmask, &gateway);
 		netif_set_up(&netif);
-
-      return 1;
+		return NETWORK_INIT_STATIC_IP;
 	}
 
-   return 0;
+	return NETWORK_INIT_SUCCESS;
 }
 
 void network_poll()

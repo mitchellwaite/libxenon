@@ -12,7 +12,7 @@ extern "C" {
 #define NETWORK_INIT_STATIC_IP 1
 #define NETWORK_INIT_FAILURE -1
 
-int network_init();
+int  network_init();
 void network_poll();
 void network_print_config();
 
