@@ -355,42 +355,6 @@ int kv_get_cserial(unsigned char *serial)
 	return 0;
 }
 
-int kv_get_cserial(unsigned char *cserial)
-{
-	if (KV_FLASH_SIZE == 0)
-		return -1; //It's bad data!
-	unsigned char buffer[KV_FLASH_SIZE], tmp[0x0C];
-	int result = 0;
-	int keylen = 0x0C;
-
-	result = kv_read(buffer, 0);
-	if (result == 2 && get_virtual_cpukey(tmp) == 0)
-	{
-		result = kv_read(buffer, 1);
-	}
-	if (result != 0)
-	{
-		printf(" ! kv_get_cserial Failure: kv_read\n");
-		if (result == 2) //Hash failure
-		{
-			printf(" !   the hash check failed probably as a result of decryption failure\n");
-			printf(" !   make sure that the CORRECT key vault for this console is in flash\n");
-			printf(" !   the key vault should be at offset 0x4200 for a length of 0x4200\n");
-			printf(" !   in the 'raw' flash binary from THIS console\n");
-		}
-		return 1;
-	}
-
-	result = kv_get_key(XEKEY_CONSOLE_SERIAL_NUMBER, cserial, &keylen, buffer);
-	if (result != 0)
-	{
-		printf(" ! kv_get_cserial Failure: kv_get_key %d\n", result);
-		return result;
-	}
-
-	return 0;
-}
-
 void print_cpu_dvd_keys(void)
 {
 	unsigned char key[0x10];
