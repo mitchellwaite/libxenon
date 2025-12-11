@@ -5,7 +5,7 @@
 
 TARGET=xenon
 PREFIX="${PREFIX:-/usr/local/xenon}" # Install location of your final toolchain.
-PARALLEL=
+PARALLEL=${PARALLEL:--j$(nproc --all)}
 
 BINUTILS_DL="https://mirror.csclub.uwaterloo.ca/gnu/binutils/binutils-2.32.tar.gz"
 GCC_DL="https://mirror.csclub.uwaterloo.ca/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.gz"
