@@ -18,15 +18,12 @@ see file COPYING or http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
 #include <time/time.h>
 #include <unistd.h>
 #include <xenon_soc/xenon_power.h>
+#include <xb360/xb360.h>
+
 #include "elf.h"
 #include "elf_abi.h"
 #include "xetypes.h"
-#include <stdint.h>
 
-unsigned int xenon_get_ram_size()
-{
-	return __builtin_bswap32(*(unsigned int *)0xE1040000);
-}
 static int fdt_fixup_memory_reg(void *fdt)
 {
     int mem = fdt_path_offset(fdt, "/memory");
@@ -532,12 +529,14 @@ int elf_runWithDeviceTree(void *elf_addr, int elf_size, void *dt_addr,
     printf(" ! fdt_open_into() failed\n");
     return res;
   }
-    res = fdt_fixup_memory_reg(ELF_DEVTREE_START);
+
+  res = fdt_fixup_memory_reg(ELF_DEVTREE_START);
   if (res < 0) {
     printf(" ! fdt_fixup_memory_reg() failed: %s\n", fdt_strerror(res));
     return res;
   }
   dump_memory_reg(ELF_DEVTREE_START);
+
   node = fdt_path_offset(ELF_DEVTREE_START, "/chosen");
   if (node < 0) {
     printf(" ! /chosen node not found in devtree\n");
