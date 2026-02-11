@@ -5,7 +5,7 @@
 #include "lwip/pbuf.h"
 #include "lwip/sys.h"
 #include "lwip/stats.h"
-#include "lwip/timers.h"
+#include "lwip/timeouts.h"
 #include "netif/etharp.h"
 
 #include <time/time.h>
@@ -173,13 +173,13 @@ err_t enet_init(struct netif *netif)
 	netif->state = context;
 	netif->name[0] = 'e';
 	netif->name[1] = 'n';
-	netif->output = etharp_output; //enet_output; //lwip 1.3.0
+	netif->output = etharp_output; 
 	netif->linkoutput = enet_linkoutput;
 	context->ethaddr = (struct eth_addr *)&(netif->hwaddr[0]);
 
 	netif->hwaddr_len = 6;
 	netif->mtu = 1500;
-	netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
+	netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
 
 #if LWIP_NETIF_HOSTNAME
     netif->hostname = "XeLL";
@@ -352,7 +352,7 @@ static err_t enet_linkoutput(struct netif *netif, struct pbuf *p)
 	struct pbuf *q;
 	struct enet_context *context = (struct enet_context *) netif->state;
 
-//	printf("enet linkoutput\n");
+	printf("enet linkoutput\n");
 
 	void *dstptr = context->tx_buffer_base + context->tx_descriptor_wptr * MTU;
 	int offset = 0;
@@ -365,7 +365,7 @@ static err_t enet_linkoutput(struct netif *netif, struct pbuf *p)
 	memdcbst((void*)dstptr, p->tot_len);
 	tx_data(context, dstptr, p->tot_len);
 
-//	printf("ok, data transmitted!\n");
+   printf("ok, data transmitted!\n");
 
 	return 0;
 }

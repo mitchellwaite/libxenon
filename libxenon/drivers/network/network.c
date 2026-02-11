@@ -4,7 +4,7 @@
 
 #include "lwipopts.h"
 #include "lwip/debug.h"
-#include "lwip/timers.h"
+#include "lwip/timeouts.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
 #include "lwip/sys.h"
@@ -14,14 +14,14 @@
 #include "lwip/ip.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
-#include "lwip/tcp_impl.h"
+#include "lwip/priv/tcp_priv.h"
 
 #include "network.h"
 
 struct netif netif;
 
 ip_addr_t ipaddr, netmask, gateway;
-static uint64_t now, last_tcp, last_dhcp_coarse, last_dhcp_fine, now2, dhcp_wait;
+static uint64_t now, last_tcp, last_dhcp_coarse, last_dhcp_fine, now2, dhcp_wait, last_arp;
 
 #define NTOA(ip) (int)((ip.addr>>24)&0xff), (int)((ip.addr>>16)&0xff), (int)((ip.addr>>8)&0xff), (int)(ip.addr&0xff)
 
@@ -37,12 +37,13 @@ int network_init()
 #ifdef STATS
 	stats_init();
 #endif /* STATS */
-	printf(" * initializing lwip 1.4.1...\n");
+	printf(" * initializing lwip 2.2.1...\n");
 
 	last_tcp=mftb();
 	last_dhcp_fine=mftb();
 	last_dhcp_coarse=mftb();
-
+   last_arp=mftb();
+   
 	//printf(" * configuring device for DHCP...\r\n");
 	/* Start Network with DHCP */
 	IP4_ADDR(&netmask, 255,255,255,255);
@@ -52,11 +53,12 @@ int network_init()
 	lwip_init();  //lwip 1.4.1
 
 	printf(" * initializing NIC\n");
-	if (!netif_add(&netif, &ipaddr, &netmask, &gateway, NULL, enet_init, ip_input)){
+	if (!netif_add(&netif, &ipaddr, &netmask, &gateway, NULL, enet_init, ethernet_input)){
 		printf(" ! netif_add failed!\n");
 		return NETWORK_INIT_FAILURE;
 	}
 	netif_set_default(&netif);
+   netif_set_up(&netif);
 
 	printf(" * requesting dhcp...");
 	//dhcp_set_struct(&netif, &netif_dhcp);
@@ -64,7 +66,7 @@ int network_init()
 
 	dhcp_wait=mftb();
 	int i = 0;
-	while (netif.ip_addr.addr==0 && i < 60) {
+	while (dhcp_supplied_address(&netif)==0 && i < 60) {
 		network_poll();
 		now2=mftb();
 		if (tb_diff_msec(now2, dhcp_wait) >= 250){
@@ -75,7 +77,7 @@ int network_init()
 		}
 	}
 
-	if (netif.ip_addr.addr) {
+	if (dhcp_supplied_address(&netif)) {
 		printf("success\n");
 	} else {
 		printf("failed\n");
@@ -117,6 +119,12 @@ void network_poll()
 		last_dhcp_coarse=mftb();
 		dhcp_coarse_tmr();
 	}
+
+   if (tb_diff_msec(now, last_arp) >= ARP_TMR_INTERVAL )
+   {
+      last_arp = mftb();
+      etharp_tmr();
+   }
 }
 
 void network_print_config()

@@ -38,6 +38,7 @@
 #include <stdio.h>
 
 #define NO_SYS                  1
+#define SYS_LIGHTWEIGHT_PROT            0
 #define NO_SYS_NO_TIMERS		1
 #define ETHARP_TRUST_IP_MAC		1
 
@@ -48,6 +49,11 @@
 #define LWIP_SOCKET             0
 #define LWIP_NETCONN            0
 #define LWIP_NETIF_HOSTNAME     1
+#define LWIP_NETIF_STATUS_CALLBACK 1
+#define LWIP_NETIF_LINK_CALLBACK 1
+#define LWIP_DNS 1
+#define LWIP_ETHERNET 1
+#define LWIP_ARP 1
 
 #define MEM_ALIGNMENT           4
 #define MEM_SIZE                (4 * 1024 * 1024)
@@ -68,13 +74,14 @@
 #define ARP_QUEUEING            1
 #define IP_FORWARD              0
 #define IP_OPTIONS              1
-#define DHCP_DOES_ARP_CHECK     1
+#define DHCP_DOES_ARP_CHECK     0
 
 
-//#define LWIP_DEBUG 					1
-//#define DHCP_DEBUG                    LWIP_DBG_ON
-//#define NETIF_DEBUG                   LWIP_DBG_ON
-//#define TIMERS_DEBUG                  LWIP_DBG_ON
-//#define LWIP_DEBUG_TIMERNAMES			1
+#define LWIP_DEBUG 					1
+#define DHCP_DEBUG                    LWIP_DBG_ON
+#define NETIF_DEBUG                   LWIP_DBG_ON
+#define TIMERS_DEBUG                  LWIP_DBG_ON
+#define ETHARP_DEBUG LWIP_DBG_ON
+#define LWIP_DEBUG_TIMERNAMES			1
 
 #endif /* __LWIPOPTS_H__ */

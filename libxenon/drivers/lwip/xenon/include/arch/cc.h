@@ -41,10 +41,10 @@ typedef unsigned   short   u16_t;
 typedef signed     short   s16_t;
 typedef unsigned   int     u32_t;
 typedef signed     int     s32_t;
-typedef unsigned   long    u64_t;
-typedef signed     long    s64_t;
+//typedef unsigned   long    u64_t;
+//typedef signed     long    s64_t;
 
-typedef u64_t mem_ptr_t;
+//typedef u64_t mem_ptr_t;
 
 #define U32_F "u"
 #define U16_F "hu"
@@ -58,7 +58,7 @@ typedef u64_t mem_ptr_t;
 #define PACK_STRUCT_STRUCT __attribute__((packed))
 #define PACK_STRUCT_BEGIN
 #define PACK_STRUCT_END
-
+#define LWIP_DEBUG
 #ifdef LWIP_DEBUG
 
 /* LW: forward declaration */

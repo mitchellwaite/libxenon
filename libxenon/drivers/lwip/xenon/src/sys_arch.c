@@ -35,7 +35,7 @@
 
 #include "lwip/sys.h"
 #include "lwip/def.h"
-#include "lwip/timers.h"
+#include "lwip/timeouts.h"
 #include "ppc/time.h"
 
 static tb_t startTime;

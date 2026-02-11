@@ -7,6 +7,7 @@ extern "C" {
 
 #include <lwip/netif.h>
 #include <lwip/dhcp.h>
+#include <netif/ethernet.h>
 
 #define NETWORK_INIT_SUCCESS 0
 #define NETWORK_INIT_DHCP_FAILURE 1
