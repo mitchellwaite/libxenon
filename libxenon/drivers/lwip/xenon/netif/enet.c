@@ -18,6 +18,8 @@
 #define RX_DESCRIPTOR_NUM 0x10
 #define MTU 1528
 #define MEM(x) (0x80000000|(long)(x))
+#define TRACE_ENTER() printf("[TRACE] ENTER %s:%d\n", __func__, __LINE__)
+#define TRACE_EXIT() printf("[TRACE] EXIT %s:%d\n", __func__, __LINE__)
 
 struct enet_context
 {
@@ -157,11 +159,13 @@ static void rx_init(struct enet_context *context, void *base)
 
 err_t enet_init(struct netif *netif)
 {
+	TRACE_ENTER();
 	struct enet_context * context;
 
 	context = (struct enet_context *)mem_malloc(sizeof(struct enet_context));
 	if(context == NULL) {
 		printf("enet: Failed to allocate context memory.\n");
+		TRACE_EXIT();
 		return ERR_MEM;
 	} else {
 		memset(context, 0, sizeof(struct enet_context));
@@ -179,7 +183,7 @@ err_t enet_init(struct netif *netif)
 
 	netif->hwaddr_len = 6;
 	netif->mtu = 1500;
-	netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
+	netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
 
 #if LWIP_NETIF_HOSTNAME
     netif->hostname = "XeLL";
@@ -190,12 +194,14 @@ err_t enet_init(struct netif *netif)
 	enet_open(netif);
 	etharp_init();
 	//sys_timeout(ARP_TMR_INTERVAL, arp_timer, NULL);
+	TRACE_EXIT();
 	return ERR_OK;
 }
 
 
 static int enet_open(struct netif *netif)
 {
+	TRACE_ENTER();
 	int tries=10;
 	struct enet_context *context = (struct enet_context *) netif->state;
 
@@ -285,6 +291,7 @@ static int enet_open(struct netif *netif)
 	write32n(0xea001410, __builtin_bswap32(0x00101c11));	// enable RX
 	write32n(0xea001400, __builtin_bswap32(0x00001c01));	// enable TX
 
+	TRACE_EXIT();
 	return 0;
 }
 
@@ -344,11 +351,13 @@ static struct pbuf *enet_linkinput(struct enet_context *context)
 	context->rx_descriptor_rptr++;
 	context->rx_descriptor_rptr %= RX_DESCRIPTOR_NUM;
 
+	TRACE_EXIT();
 	return p;
 }
 
 static err_t enet_linkoutput(struct netif *netif, struct pbuf *p)
 {
+	TRACE_ENTER();
 	struct pbuf *q;
 	struct enet_context *context = (struct enet_context *) netif->state;
 
@@ -367,6 +376,7 @@ static err_t enet_linkoutput(struct netif *netif, struct pbuf *p)
 
    printf("ok, data transmitted!\n");
 
+	TRACE_EXIT();
 	return 0;
 }
 
@@ -418,6 +428,8 @@ enet_poll(struct netif *netif)
 
 void enet_quiesce(void)
 {
+	TRACE_ENTER();
 	write32n(0xea001400, 0);
 	write32n(0xea001410, 0);
+	TRACE_EXIT();
 }

@@ -81,7 +81,7 @@
 #define DHCP_DEBUG                    LWIP_DBG_ON
 #define NETIF_DEBUG                   LWIP_DBG_ON
 #define TIMERS_DEBUG                  LWIP_DBG_ON
-#define ETHARP_DEBUG LWIP_DBG_ON
+//#define ETHARP_DEBUG LWIP_DBG_ON
 #define LWIP_DEBUG_TIMERNAMES			1
 
 #endif /* __LWIPOPTS_H__ */
