@@ -16,6 +16,8 @@ extern uint32_t console_oldbg, console_oldfg;
 #define CONSOLE_COLOR_BLACK 0x00000000
 #define CONSOLE_COLOR_WHITE 0xFFFFFF00
 #define CONSOLE_COLOR_GREY 0xC0C0C000
+#define CONSOLE_COLOR_LIGHT_GREY 0xBFBFBF00
+#define CONSOLE_COLOR_DARK_GREY 0x73737300
 #define CONSOLE_COLOR_BROWN 0x00339900
 #define CONSOLE_COLOR_PURPLE 0xFF009900
 #define CONSOLE_COLOR_YELLOW 0x00FFFF00
@@ -51,8 +53,13 @@ void console_pset_right(int x, int y, unsigned char r, unsigned char g, unsigned
 
 int console_get_cursor_x(void);
 int console_get_cursor_y(void);
+
 int console_get_cursor_max_x(void);
 int console_get_cursor_max_y(void);
+
+int console_get_pixel_max_x(void);
+int console_get_pixel_max_y(void);
+
 void console_set_cursor(int x, int y);
 
 #ifdef __cplusplus

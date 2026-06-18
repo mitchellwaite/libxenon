@@ -233,6 +233,16 @@ int console_get_cursor_max_y(void)
    return max_y;
 }
 
+int console_get_pixel_max_x(void)
+{
+   return pixel_max_x;
+}
+
+int console_get_pixel_max_y(void)
+{
+   return pixel_max_y;
+}
+
 
 void console_set_cursor(int x, int y)
 {
