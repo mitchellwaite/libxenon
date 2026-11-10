@@ -24,6 +24,8 @@ extern struct XCONFIG_SECURED_SETTINGS secured_settings;
 
 extern struct sfc sfc;
 
+static bool emmc_nand_data_ok = false;
+
 static const kventry kvlookup[] =
 	{
 	{XEKEY_MANUFACTURING_MODE, 					0x18, 	0x01},
@@ -726,6 +728,13 @@ int xenon_memory_mapped_nand_data_ok()
 {
 	char data[0x2] = { '\0' };
 
+	// On eMMC consoles, the memory mapped NAND interface is unavailable
+	// once the eMMC is initialized. Probing it will cause eMMC failures.
+	if(emmc_is_initialized())
+	{
+		return -1;
+	}
+
 	memcpy(&data, (const void*)(0x80000200C8000000ULL), 2);
 
 	if(SFCX_IS_VALID_NAND_HEADER(data))
@@ -739,11 +748,19 @@ int xenon_memory_mapped_nand_data_ok()
 int xenon_emmc_nand_data_ok()
 {
 	char data[0x2] = { '\0' };
-	
+
+	// Check the cached eMMC status, return early if we've previously verified
+	// that we've read valid data from flash
+	if(emmc_nand_data_ok)
+	{
+		return 0;
+	}
+
 	xenon_get_logical_emmc_data(&data, 0, 2);
 
 	if(SFCX_IS_VALID_NAND_HEADER(data))
 	{
+		emmc_nand_data_ok = true;
 		return 0;
 	}
 
