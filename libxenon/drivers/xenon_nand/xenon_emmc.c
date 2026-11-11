@@ -11,7 +11,7 @@ int emmc_init_status = 0;
 
 #define EMMC_DMA_TRANSFER_BUF_SZ 0x1000
 #define EMMC_DMA_DESCRIPTOR_BUF_SZ 0x100
-#define EMMC_TIMEOUT_MS 100
+#define EMMC_TIMEOUT_MS 1000
 
 /*
     DMA Transfer buffer
@@ -142,8 +142,24 @@ void emmc_setup_dma(){
 
 int emmc_init(){
     char buffer[0x200];
+    uint64_t start_time;
 
     // Fumble our way through controller reset, and try not to drop the ball
+    sfcx_writereg(EMMC_CONTROL_REG, EMMC_CONTROL_RESET_ALL);
+    start_time = mftb();
+
+    // Wait for the controller to set bit EMMC_F0_RESET_DONE
+    while(!(sfcx_readreg(EMMC_UNK_F0_REG) & EMMC_F0_RESET_DONE))
+    {
+        if(tb_diff_msec(mftb(), start_time) > EMMC_TIMEOUT_MS)
+        {
+            printf("emmc reset timeout 0xF0=%08X\n", sfcx_readreg(EMMC_UNK_F0_REG));
+            emmc_init_status = -1;
+            return -1;
+        }
+    }
+    mdelay(10);
+
     unsigned int control_reg = sfcx_readreg(EMMC_CONTROL_REG);
     control_reg &= 0xFFFFFFFAUL;
     sfcx_writereg(EMMC_CONTROL_REG, control_reg);
@@ -189,6 +205,10 @@ int emmc_init(){
     emmc_init_status = 1;
 
     return 0;
+}
+
+bool emmc_is_initialized(){
+    return emmc_init_status > 0;
 }
 
 int xenon_get_logical_emmc_data(void* buf, unsigned int offset, unsigned int len)

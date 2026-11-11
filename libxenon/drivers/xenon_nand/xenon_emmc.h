@@ -52,6 +52,7 @@ This driver could use some improvements such as:
 #define EMMC_CMD_SET_BLOCK_COUNT 23
 #define EMMC_CMD_WRITE_BLOCK 24
 #define EMMC_CMD_WRITE_MULIPLE_BLOCK 25
+#define EMMC_CONTROL_RESET_ALL 0x7000000
 
 // eMMC Interface flags
 #define EMMC_FLAG_NONE 0        // Just perform a basic command
@@ -59,9 +60,11 @@ This driver could use some improvements such as:
 #define EMMC_FLAG_PIO_WRITE 2   // Perform a transfer from PIO FIFO
 #define EMMC_FLAG_DMA_READ 4         // Perform a DMA transfer from eMMC to system
 #define EMMC_FLAG_DMA_WRITE 8         // Perform a DMA transfer from system to eMMC
+#define EMMC_F0_RESET_DONE 0x200000 // Set by the eMMC controller once reset is complete
 
 // eMMC Interface Functions
 int emmc_init(); // initialize eMMC controller. Returns 0 on success.
+bool emmc_is_initialized(); // returns true if emmc_init has succeeded
 int emmc_cmd(uint8_t cmd, uint32_t argument, int flags); // issue a eMMC command. optional: PIO or DMA transfer using flags
 
 void emmc_peek_pio_buffer(char * output); // copy PIO buffer to output (size is 0x200)
