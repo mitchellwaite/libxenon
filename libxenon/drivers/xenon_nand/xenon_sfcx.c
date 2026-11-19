@@ -576,7 +576,7 @@ int try_rawflash_internal(char *filename, bool ignoreMetadataCheck)
 	if (f < 0)	
 		return f; //Can't open file!
 
-	printf(" * rawflash v5 started (by cOz, modified By Swizzy)\n");
+	printf(" * rawflash v5 started (by cOz, modified By Swizzy and sk1080)\n");
 
 	if(ignoreMetadataCheck)
 	{
