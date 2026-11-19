@@ -260,7 +260,7 @@ int emmc_rawflash_writeImage(int len, int f){
     char* dmabuf = (char*)get_emmc_dma_buffer();
     for(int offset = 0; offset < EMMC_NAND_48; offset+=EMMC_DMA_TRANSFER_BUF_SZ){
         if((offset & 0x3FFF) == 0){
-            printf("... write block 0x%x\n", offset>>14);
+            printf("processing block 0x%04x of 0x%04x    \r", offset>>14, EMMC_NAND_48 >> 14);
         }
         if(read(f, dmabuf, EMMC_DMA_TRANSFER_BUF_SZ) < 0){
             printf("failed to read source file @ 0x%08X\n", offset);
@@ -289,5 +289,7 @@ int emmc_rawflash_writeImage(int len, int f){
             goto retry;
         }
     }
+
+    printf("\n\n");
     return 1;
 }
